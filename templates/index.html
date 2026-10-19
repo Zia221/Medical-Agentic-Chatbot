@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#0b766e">
+    <meta name="description" content="MedGuide AI provides educational medical information, knowledge-base search, and AI-assisted health guidance.">
+
+    <title>MedGuide AI | Your Health Companion</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #0b766e;
+            --primary-dark: #075c56;
+            --primary-light: #e4f6f2;
+            --background: #f4f8fa;
+            --surface: #ffffff;
+            --text: #18343b;
+            --muted: #71868d;
+            --border: #e2ebed;
+            --warning-bg: #fff7e5;
+            --warning-text: #805c18;
+            --shadow: 0 20px 70px rgba(25, 71, 78, 0.09);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 30px 18px;
+            background:
+                radial-gradient(ellipse at 8% 5%, #dff5ef 0, transparent 32%),
+                radial-gradient(ellipse at 95% 90%, #e6f0fb 0, transparent 30%),
+                var(--background);
+            color: var(--text);
+            font-family: "DM Sans", sans-serif;
+        }
+
+        button,
+        textarea,
+        input {
+            font: inherit;
+        }
+
+        button,
+        label.action {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        button:focus-visible,
+        textarea:focus-visible,
+        input:focus-visible,
+        label.action:focus-within {
+            outline: 3px solid #8ddbd0;
+            outline-offset: 3px;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 1050px;
+            margin: 0 auto;
+            overflow: hidden;
+            background: var(--surface);
+            border: 1px solid rgba(214, 230, 231, 0.8);
+            border-radius: 26px;
+            box-shadow: var(--shadow);
+        }
+
+        /* Header */
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 27px 32px;
+            color: white;
+            background: linear-gradient(120deg, #075b56, #0b766e 60%, #15978b);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-width: 0;
+        }
+
+        .brand-icon {
+            display: grid;
+            width: 54px;
+            height: 54px;
+            flex-shrink: 0;
+            place-items: center;
+            border: 1px solid #ffffff38;
+            border-radius: 17px;
+            background: #ffffff1a;
+            font-size: 29px;
+            font-weight: 700;
+        }
+
+        h1 {
+            margin: 0;
+            font-family: "Manrope", sans-serif;
+            font-size: clamp(21px, 3vw, 29px);
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        header p {
+            margin: 5px 0 0;
+            color: #d2f4ed;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        #status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border: 1px solid #ffffff35;
+            border-radius: 99px;
+            background: #ffffff17;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #f8cf68;
+        }
+
+        /* Medical notice */
+
+        .notice {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px 28px;
+            border-bottom: 1px solid #f0e5c9;
+            background: var(--warning-bg);
+            color: var(--warning-text);
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .notice-icon {
+            flex-shrink: 0;
+            font-size: 18px;
+        }
+
+        .notice strong {
+            font-weight: 700;
+        }
+
+        /* Welcome section */
+
+        .welcome {
+            padding: 28px 30px 18px;
+        }
+
+        .welcome-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            margin-bottom: 12px;
+            color: var(--primary);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.3px;
+            text-transform: uppercase;
+        }
+
+        .welcome h2 {
+            margin: 0;
+            font-family: "Manrope", sans-serif;
+            font-size: clamp(23px, 3vw, 31px);
+            font-weight: 800;
+            letter-spacing: -1.1px;
+            line-height: 1.3;
+        }
+
+        .welcome p {
+            max-width: 630px;
+            margin: 10px 0 0;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        /* Suggested questions */
+
+        .suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 0 30px 24px;
+        }
+
+        .suggestion {
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: #fbfdfd;
+            color: #36565e;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: 0.2s ease;
+        }
+
+        .suggestion:hover {
+            transform: translateY(-2px);
+            border-color: #a5dcd4;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+        }
+
+        /* Chat */
+
+        .chat-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 28px;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            background: #fbfdfd;
+        }
+
+        .chat-heading h3 {
+            margin: 0;
+            font-family: "Manrope", sans-serif;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .chat-heading span {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        #messages {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            height: min(54vh, 540px);
+            min-height: 300px;
+            overflow-y: auto;
+            padding: 28px;
+            scroll-behavior: smooth;
+            background:
+                linear-gradient(#ffffffed, #ffffffed),
+                radial-gradient(circle, #d9e8e7 1px, transparent 1px);
+            background-size: auto, 20px 20px;
+        }
+
+        #messages::-webkit-scrollbar {
+            width: 7px;
+        }
+
+        #messages::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            background: #d6e5e5;
+        }
+
+        .bot,
+        .user {
+            max-width: min(84%, 720px);
+            padding: 16px 19px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.85;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .bot {
+            align-self: flex-start;
+            border: 1px solid #e8eeee;
+            border-bottom-left-radius: 5px;
+            background: #f7fafa;
+            color: #28464d;
+        }
+
+        .user {
+            align-self: flex-end;
+            border: 1px solid #ccece5;
+            border-bottom-right-radius: 5px;
+            background: #e5f7f2;
+            color: #164a45;
+        }
+
+        .sources {
+            margin-top: 13px;
+            padding-top: 10px;
+            border-top: 1px solid #dfe9e8;
+            color: #54757b;
+            font-size: 11px;
+            line-height: 1.8;
+        }
+
+        .sources a {
+            color: var(--primary);
+            overflow-wrap: anywhere;
+        }
+
+        /* Image preview */
+
+        #preview {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 14px 28px;
+            border-top: 1px solid var(--border);
+            background: #f8fbfb;
+        }
+
+        #thumbnail {
+            max-width: 100px;
+            max-height: 100px;
+            object-fit: contain;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: white;
+        }
+
+        /* Composer */
+
+        form {
+            padding: 22px 28px 25px;
+            border-top: 1px solid var(--border);
+            background: white;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 10px;
+            color: #47636a;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        textarea {
+            display: block;
+            width: 100%;
+            min-height: 105px;
+            resize: vertical;
+            padding: 17px 18px;
+            border: 1px solid #d8e5e7;
+            border-radius: 16px;
+            outline: none;
+            background: #fbfdfd;
+            color: var(--text);
+            font-size: 14px;
+            line-height: 1.7;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        textarea::placeholder {
+            color: #9aadb1;
+        }
+
+        textarea:focus {
+            border-color: #70c8bd;
+            box-shadow: 0 0 0 4px #0b766e10;
+            background: white;
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            flex-wrap: wrap;
+            margin-top: 14px;
+        }
+
+        button,
+        .action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            min-height: 42px;
+            padding: 10px 14px;
+            border: 1px solid #e0e9ea;
+            border-radius: 12px;
+            background: #f8fbfb;
+            color: #36565e;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+            transition: background 0.2s, border-color 0.2s, transform 0.2s;
+        }
+
+        button:hover,
+        .action:hover {
+            border-color: #b7ddd7;
+            background: var(--primary-light);
+        }
+
+        button:active,
+        .action:active {
+            transform: scale(0.98);
+        }
+
+        #send {
+            min-width: 125px;
+            margin-left: auto;
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 5px 15px #0b766e24;
+        }
+
+        #send:hover {
+            border-color: var(--primary-dark);
+            background: var(--primary-dark);
+        }
+
+        button:disabled {
+            cursor: wait;
+            opacity: 0.55;
+        }
+
+        /* Optional API access */
+
+        details {
+            padding: 0 28px 22px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        details summary {
+            width: fit-content;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        details input {
+            width: 100%;
+            max-width: 380px;
+            margin-top: 13px;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            outline-color: var(--primary);
+        }
+
+        /* Camera */
+
+        #video {
+            display: block;
+            width: calc(100% - 56px);
+            max-height: 360px;
+            margin: 0 28px 12px;
+            border-radius: 16px;
+            background: #102526;
+        }
+
+        #cameraActions {
+            display: flex;
+            gap: 10px;
+            padding: 0 28px 20px;
+        }
+
+        #cameraActions[hidden],
+        #video[hidden],
+        #preview[hidden] {
+            display: none;
+        }
+
+        /* Footer */
+
+        .footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 16px 28px;
+            border-top: 1px solid var(--border);
+            background: #f8fbfb;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.7;
+        }
+
+        .footer-brand {
+            color: var(--primary);
+            font-weight: 800;
+        }
+
+        /* Responsive layout */
+
+        @media (max-width: 650px) {
+            body {
+                padding: 0;
+                background: var(--background);
+            }
+
+            .app {
+                min-height: 100vh;
+                border: 0;
+                border-radius: 0;
+            }
+
+            header {
+                align-items: flex-start;
+                padding: 21px 18px;
+            }
+
+            .brand {
+                gap: 11px;
+            }
+
+            .brand-icon {
+                width: 43px;
+                height: 43px;
+                border-radius: 13px;
+                font-size: 24px;
+            }
+
+            header p {
+                max-width: 230px;
+                font-size: 11px;
+            }
+
+            .header-right {
+                gap: 5px;
+            }
+
+            #status {
+                padding: 8px 9px;
+                font-size: 10px;
+            }
+
+            .notice {
+                padding: 13px 17px;
+                font-size: 12px;
+            }
+
+            .welcome {
+                padding: 24px 19px 16px;
+            }
+
+            .welcome h2 {
+                font-size: 25px;
+            }
+
+            .welcome p {
+                font-size: 13px;
+            }
+
+            .suggestions {
+                gap: 8px;
+                padding: 0 19px 20px;
+            }
+
+            .suggestion {
+                padding: 9px 11px;
+                font-size: 11px;
+            }
+
+            .chat-heading {
+                padding: 14px 18px;
+            }
+
+            #messages {
+                height: 48vh;
+                min-height: 280px;
+                padding: 19px 15px;
+            }
+
+            .bot,
+            .user {
+                max-width: 94%;
+                padding: 13px 14px;
+                font-size: 13px;
+            }
+
+            form {
+                padding: 17px 15px 20px;
+            }
+
+            textarea {
+                min-height: 95px;
+                font-size: 13px;
+            }
+
+            .toolbar {
+                gap: 8px;
+            }
+
+            button,
+            .action {
+                min-height: 39px;
+                padding: 9px 11px;
+                font-size: 11px;
+            }
+
+            #send {
+                min-width: 100%;
+                margin: 4px 0 0;
+            }
+
+            #preview {
+                padding: 12px 16px;
+            }
+
+            details {
+                padding: 0 17px 20px;
+            }
+
+            #video {
+                width: calc(100% - 30px);
+                margin: 0 15px 12px;
+            }
+
+            #cameraActions {
+                padding: 0 15px 18px;
+            }
+
+            .footer {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 5px;
+                padding: 14px 18px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<main class="app">
+
+    <!-- Application header -->
+    <header>
+        <div class="brand">
+            <div class="brand-icon" aria-hidden="true">✚</div>
+
+            <div>
+                <h1>MedGuide AI</h1>
+                <p>Your AI-powered medical education companion</p>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <span id="status" role="status" aria-live="polite">
+                <span class="status-dot" aria-hidden="true"></span>
+                Checking...
+            </span>
+        </div>
+    </header>
+
+    <!-- Medical safety notice -->
+    <div class="notice" role="note">
+        <span class="notice-icon" aria-hidden="true">⚕</span>
+        <div>
+            <strong>Important medical notice:</strong>
+            MedGuide AI provides educational information, not a diagnosis
+            or a substitute for professional medical care. If you have
+            severe chest pain, serious breathing difficulty, stroke symptoms,
+            or another medical emergency, contact local emergency services
+            immediately.
+        </div>
+    </div>
+
+    <!-- Welcome section -->
+    <section class="welcome">
+        <div class="welcome-label">
+            <span aria-hidden="true">✦</span>
+            YOUR PERSONAL HEALTH COMPANION
+        </div>
+
+        <h2>How can I help you<br>feel better informed?</h2>
+
+        <p>
+            Ask health-related questions, describe your symptoms, or upload
+            an image for a cautious description of visible features.
+            Get AI-generated educational guidance supported by available
+            knowledge-base and web sources.
+        </p>
+    </section>
+
+    <!-- Suggested questions -->
+    <section class="suggestions" aria-label="Suggested questions">
+        <button class="suggestion" type="button"
+            data-question="What are common causes of headaches?">
+            ◉ Headaches
+        </button>
+
+        <button class="suggestion" type="button"
+            data-question="What are common causes of acne, and when should I see a dermatologist?">
+            ◉ Skin & acne
+        </button>
+
+        <button class="suggestion" type="button"
+            data-question="What are common causes of a cough, and what warning signs should I watch for?">
+            ◉ Cough & cold
+        </button>
+
+        <button class="suggestion" type="button"
+            data-question="What information should I prepare before visiting a doctor?">
+            ◉ Doctor visit
+        </button>
+    </section>
+
+    <!-- Chat heading -->
+    <div class="chat-heading">
+        <h3>💬 Health conversation</h3>
+        <span>AI-assisted educational guidance</span>
+    </div>
+
+    <!-- Chat messages -->
+    <section id="messages" aria-live="polite" aria-label="Chat messages">
+        <article class="bot">
+            Hello! 👋 Welcome to MedGuide AI.
+
+            I'm here to help you understand health topics in simple language.
+
+            You can:
+            • Ask questions about symptoms and general health.
+            • Upload a supported image for a description of visible features.
+            • Use your microphone to enter a question.
+            • Listen to an answer using text-to-speech.
+
+            What would you like to learn about today?
+        </article>
+    </section>
+
+    <!-- Selected image preview -->
+    <div id="preview" hidden>
+        <img id="thumbnail" alt="Preview of selected medical image">
+        <button id="remove" type="button">✕ Remove image</button>
+    </div>
+
+    <!-- Message composer -->
+    <form id="chatForm">
+        <label class="input-label" for="message">
+            Describe your symptoms or ask a question
+        </label>
+
+        <textarea
+            id="message"
+            placeholder="For example: What are common causes of acne, and when should I see a dermatologist?"
+            rows="3"
+            required
+            maxlength="4000"
+            aria-label="Your medical question"
+        ></textarea>
+
+        <div class="toolbar">
+            <label class="action" for="image" tabindex="0">
+                📎 Upload image
+            </label>
+
+            <input
+                id="image"
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                hidden
+            >
+
+            <button class="action" id="camera" type="button">
+                📷 Camera
+            </button>
+
+            <button class="action" id="mic" type="button">
+                🎙 Voice
+            </button>
+
+            <button class="action" id="listen" type="button">
+                🔊 Read answer
+            </button>
+
+            <button id="send" type="submit">
+                Send message <span aria-hidden="true">➜</span>
+            </button>
+        </div>
+    </form>
+
+    <!-- Optional API authentication -->
+    <details>
+        <summary>⚙ Advanced settings · API access</summary>
+
+        <p>
+            If your backend requires an API token, enter the configured
+            API_TOKEN from your local .env file.
+        </p>
+
+        <input
+            id="token"
+            type="password"
+            placeholder="API token"
+            autocomplete="off"
+            aria-label="API access token"
+        >
+    </details>
+
+    <!-- Camera interface -->
+    <video
+        id="video"
+        autoplay
+        playsinline
+        hidden
+        aria-label="Camera preview"
+    ></video>
+
+    <div id="cameraActions" hidden>
+        <button id="snap" type="button">📸 Capture photo</button>
+        <button id="closeCamera" type="button">✕ Close camera</button>
+    </div>
+
+    <canvas id="canvas" hidden></canvas>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <span>
+            <span class="footer-brand">✚ MedGuide AI</span>
+            &nbsp; Built for medical education and awareness.
+        </span>
+
+        <span>Not a substitute for professional medical advice.</span>
+    </footer>
+
+</main>
+
+<script src="/static/app.js"></script>
+
+<script>
+    // Suggested questions populate the existing chat input.
+    document.querySelectorAll(".suggestion").forEach((button) => {
+        button.addEventListener("click", () => {
+            const message = document.getElementById("message");
+            message.value = button.dataset.question || "";
+            message.focus();
+        });
+    });
+
+    // Make the hidden image input keyboard-accessible through its label.
+    document.querySelector('label[for="image"]').addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            document.getElementById("image").click();
+        }
+    });
+</script>
+
+</body>
+</html>
